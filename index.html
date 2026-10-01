@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TransGeo Kreatif – Transformasi Geometri Kelas XI</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light dark;--bg:#eef4f3;--fg:#14223a;--card:#fff;--mut:#52607a;--ac:#1b5e9e;--oc:#fff;--ln:#cfdcdb}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e1a24;--fg:#e6edf5;--card:#162533;--mut:#9aabc0;--ac:#6bbcf5;--oc:#0b1520;--ln:#26394b}}
+:root[data-theme=dark]{--bg:#0e1a24;--fg:#e6edf5;--card:#162533;--mut:#9aabc0;--ac:#6bbcf5;--oc:#0b1520;--ln:#26394b}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 'Avenir Next','Segoe UI',system-ui,sans-serif}
+header{background-image:linear-gradient(var(--ln) 1px,transparent 1px),linear-gradient(90deg,var(--ln) 1px,transparent 1px);background-size:26px 26px;border-bottom:1px solid var(--ln)}
+.w{max-width:1080px;margin:auto;padding:0 16px}
+header .w{padding-top:22px;padding-bottom:16px}h1{margin:0;font-size:1.9rem;letter-spacing:-.02em}
+header p,small,.q{color:var(--mut)}header p{margin:.2rem 0 0}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:2;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:8px 16px;max-width:1080px;margin:auto}
+nav button{white-space:nowrap}
+main{padding-bottom:40px}h2{margin:.6rem 0 .2rem}h3{margin:1.2rem 0 .2rem}h4{margin:.2rem 0}
+.row{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:14px}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+@media(max-width:760px){.row{grid-template-columns:1fr}}
+canvas{width:100%;height:auto;background:var(--card);border:1px solid var(--ln);border-radius:12px}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:10px 14px;margin:8px 0}
+button{font:inherit;font-size:.9rem;cursor:pointer;color:var(--fg);background:var(--card);border:1px solid var(--ln);border-radius:999px;padding:6px 14px;margin:2px 0}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+button.on{background:var(--ac);color:var(--oc);border-color:var(--ac)}
+label{display:block;margin:8px 0;font-size:.92rem}
+input,select,textarea{width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--ln);border-radius:8px;padding:6px 8px}
+input[type=range]{padding:0}input[type=checkbox]{width:auto;margin-right:6px}
+meter{width:150px;vertical-align:middle}
+.fm{font-family:ui-monospace,Consolas,monospace;font-size:.84rem;background:var(--bg);padding:6px 8px;border-radius:8px;margin:6px 0}
+details{margin:6px 0}
+</style></head><body>
+<header><div class="w"><h1>📐 TransGeo Kreatif</h1><p>Transformasi Geometri kelas XI: translasi, refleksi, rotasi, dilatasi. Belajar mendalam lewat berpikir kreatif (Fluency, Flexibility, Originality).</p></div></header>
+<nav id="nav"></nav><main class="w" id="main"></main>
+<script>
+const $=s=>document.querySelector(s),R=n=>Math.round(n*100)/100,sg=n=>(n<0?'− ':'+ ')+Math.abs(n),LB='ABCD',XS=['Cara grafik / gambar','Cara aljabar / matriks','Cara situasi nyata'];
+const SH={Segitiga:[[1,1],[4,1],[1,3]],Persegi:[[1,1],[3,1],[3,3],[1,3]],'Layang-layang':[[2,0],[4,2],[2,5],[0,2]]};
+const rot=(q,c,a)=>{const t=a*Math.PI/180,x=q[0]-c[0],y=q[1]-c[1];return[c[0]+x*Math.cos(t)-y*Math.sin(t),c[1]+x*Math.sin(t)+y*Math.cos(t)]};
+const S={
+t:{n:'Translasi',col:'#2a9d8f',
+k:'Translasi memindahkan setiap titik sejauh dan searah yang sama. Rumusnya (x, y) → (x + a, y + b).',
+ch:'Hanya posisi yang berubah. Ukuran dan bentuk tetap; semua titik bergeser sebesar vektor (a, b) yang sama.',
+p:[['a','Geser horizontal (a)',-8,8,1,4],['b','Geser vertikal (b)',-8,8,1,2]],
+f:(q,v)=>[q[0]+v.a,q[1]+v.b],
+m:v=>`T(${v.a}, ${v.b}): x′ = x ${sg(v.a)}, y′ = y ${sg(v.b)}`,
+F:'Titik A(1, 1) harus berpindah ke A′(4, 3) lewat DUA translasi berurutan. Tulis sebanyak mungkin pasangan translasi berbeda, misalnya (1, 0) lalu (2, 2).',
+X:'Tentukan translasi yang memindahkan A(1, 1) ke A′(4, 3) dengan tiga cara berbeda:',
+O:'Rancang pola batik, lantai, atau logo dari translasi berulang. Gambarkan idemu dan jelaskan vektor translasinya.'},
+r:{n:'Refleksi',col:'#8e5bd6',
+k:'Refleksi (pencerminan) membalik bangun terhadap garis cermin. Jarak titik dan bayangannya ke cermin selalu sama.',
+ch:'Posisi berubah dan orientasi terbalik. Ukuran dan bentuk tetap; garis penghubung titik dan bayangannya tegak lurus cermin.',
+p:[['m','Garis cermin',['Sumbu-x','Sumbu-y','y = x','y = −x','x = h','y = k'],0],['h','Nilai h atau k',-6,6,1,2]],
+f:(q,v)=>{const[x,y]=q,h=v.h;return[[x,-y],[-x,y],[y,x],[-y,-x],[2*h-x,y],[x,2*h-y]][v.m]},
+ln:v=>[[[-8,0],[8,0]],[[0,-8],[0,8]],[[-8,-8],[8,8]],[[-8,8],[8,-8]],[[v.h,-8],[v.h,8]],[[-8,v.h],[8,v.h]]][v.m],
+m:v=>['(x, y) → (x, −y)','(x, y) → (−x, y)','(x, y) → (y, x)','(x, y) → (−y, −x)',`(x, y) → (${2*v.h} − x, y)`,`(x, y) → (x, ${2*v.h} − y)`][v.m],
+F:'Segitiga ABC dicerminkan. Tulis sebanyak mungkin garis cermin berbeda beserta koordinat A′, misalnya sumbu-y → A′(−1, 1).',
+X:'Jelaskan mengapa jarak titik ke cermin sama dengan jarak bayangannya ke cermin, dengan tiga cara:',
+O:'Ciptakan huruf, nama, atau logo simetris dengan pencerminan. Apa garis cerminnya dan pesan apa yang ingin kamu sampaikan?'},
+o:{n:'Rotasi',col:'#e07a1f',
+k:'Rotasi memutar bangun sebesar sudut θ terhadap sebuah pusat P. Sudut positif berarti berlawanan arah jarum jam.',
+ch:'Posisi berubah; ukuran dan bentuk tetap. Jarak setiap titik ke pusat putar tidak berubah.',
+p:[['d','Sudut θ (°)',-360,360,15,90],['x','Pusat P, koordinat x',-6,6,1,0],['y','Pusat P, koordinat y',-6,6,1,0]],
+f:(q,v)=>rot(q,[v.x,v.y],v.d),
+ct:v=>[v.x,v.y],
+m:v=>`Pusat (${v.x}, ${v.y}), θ = ${v.d}°: x′ = x cosθ − y sinθ, y′ = x sinθ + y cosθ (relatif terhadap pusat)`,
+F:'Titik P(4, 2) diputar terhadap O(0, 0). Tulis sebanyak mungkin sudut berbeda beserta bayangan P′, misalnya 90° → (−2, 4).',
+X:'Tentukan bayangan titik (3, 1) setelah rotasi 90° berpusat di O dengan tiga cara:',
+O:'Rancang kincir angin, mandala, atau roda hias dari rotasi berulang. Tentukan pusat, sudut, dan banyak putarannya.'},
+d:{n:'Dilatasi',col:'#d1435b',
+k:'Dilatasi mengubah ukuran bangun dengan faktor skala k terhadap sebuah pusat. |k| > 1 memperbesar, |k| < 1 memperkecil, k negatif membalik ke seberang pusat.',
+ch:'Ukuran dan posisi berubah, bentuk tetap sebangun. Setiap sisi menjadi |k| kali lebih panjang.',
+p:[['k','Faktor skala k',-3,3,.5,2],['x','Pusat P, koordinat x',-6,6,1,0],['y','Pusat P, koordinat y',-6,6,1,0]],
+f:(q,v)=>[v.x+v.k*(q[0]-v.x),v.y+v.k*(q[1]-v.y)],
+ct:v=>[v.x,v.y],
+m:v=>`D[(${v.x}, ${v.y}), ${v.k}]: x′ = ${v.x} + ${v.k}(x − ${v.x}), y′ = ${v.y} + ${v.k}(y − ${v.y})`,
+F:'Tulis sebanyak mungkin faktor skala k berbeda (besar, kecil, negatif) dan jelaskan efeknya pada ukuran serta posisi bayangan.',
+X:'Perbesar segitiga ABC dua kali (k = 2) berpusat di O dengan tiga cara:',
+O:'Rancang logo bersarang atau spiral dari dilatasi dan rotasi berulang. Jelaskan pusat, k, dan sudutnya.'}};
+const V={};for(const k in S){V[k]={};S[k].p.forEach(p=>V[k][p[0]]=Array.isArray(p[2])?p[3]:p[5])}
+let base=SH.Segitiga.map(q=>q.slice()),karya=[],cur='home';
+
+function draw(cv,L,ex){const g=cv.getContext('2d'),W=cv.width,u=W/16,cs=getComputedStyle(document.documentElement),c=n=>cs.getPropertyValue(n).trim(),fg=c('--fg'),ln=c('--ln'),ac=c('--ac'),X=x=>W/2+x*u,Y=y=>W/2-y*u;
+g.clearRect(0,0,W,W);g.font='14px system-ui';
+for(let i=-8;i<=8;i++){g.strokeStyle=i?ln:fg;g.lineWidth=i?1:2.5;g.beginPath();g.moveTo(X(i),0);g.lineTo(X(i),W);g.moveTo(0,Y(i));g.lineTo(W,Y(i));g.stroke();if(i&&i%2==0){g.fillStyle=fg;g.fillText(i,X(i)-6,Y(0)+16);g.fillText(i,X(0)+6,Y(i)+5)}}
+if(ex.l){g.strokeStyle='#e0a100';g.lineWidth=3;g.beginPath();g.moveTo(X(ex.l[0][0]),Y(ex.l[0][1]));g.lineTo(X(ex.l[1][0]),Y(ex.l[1][1]));g.stroke()}
+if(ex.j){g.setLineDash([7,5]);g.strokeStyle=fg;g.globalAlpha=.4;g.lineWidth=1.5;L[0].p.forEach((q,i)=>{const r=L[1].p[i];g.beginPath();g.moveTo(X(q[0]),Y(q[1]));g.lineTo(X(r[0]),Y(r[1]));g.stroke()});g.globalAlpha=1;g.setLineDash([])}
+L.forEach(s=>{const col=s.c||ac;g.beginPath();s.p.forEach((q,i)=>g[i?'lineTo':'moveTo'](X(q[0]),Y(q[1])));g.closePath();g.globalAlpha=.3;g.fillStyle=col;g.fill();g.globalAlpha=1;g.strokeStyle=col;g.lineWidth=2.5;g.stroke();if(s.t!=null)s.p.forEach((q,i)=>{g.fillStyle=fg;g.fillText(LB[i]+s.t,X(q[0])+7,Y(q[1])-7)})});
+if(ex.c){g.fillStyle='#e0a100';g.beginPath();g.arc(X(ex.c[0]),Y(ex.c[1]),6,0,7);g.fill();g.fillStyle=fg;g.fillText('P',X(ex.c[0])+8,Y(ex.c[1])+16)}}
+
+function upd(k){const s=S[k],v=V[k],im=base.map(q=>s.f(q,v));
+s.p.forEach(p=>{const e=$('#v_'+k+p[0]);if(e)e.textContent=v[p[0]]});
+$('#fm_'+k).textContent=s.m(v);
+$('#pt_'+k).innerHTML=base.map((q,i)=>`${LB[i]}(${R(q[0])}, ${R(q[1])}) → ${LB[i]}′(${R(im[i][0])}, ${R(im[i][1])})`).join('<br>');
+draw($('#c_'+k),[{p:base,t:''},{p:im,c:s.col,t:'′'}],{j:1,l:s.ln&&s.ln(v),c:s.ct&&s.ct(v)})}
+
+const M=(t,k,v,x,s)=>{const m=$('#m'+t+'_'+k);m.max=x;m.value=v;$('#c'+t+'_'+k).textContent=s};
+function ff(k){const q=$('#p_'+k),F=new Set($('#f_'+k).value.split('\n').map(s=>s.trim().toLowerCase()).filter(Boolean)).size,
+X=[...q.querySelectorAll('.xx')].filter(i=>i.value.trim().length>8).length,
+O=q.querySelectorAll('input.ck:checked').length+($('#og_'+k).value.trim().length>20?1:0);
+M('f',k,F,5,`${F} ide unik ${F>=5?'· target tercapai 🎉':'· target minimal 5'}`);
+M('x',k,X,3,`${X} dari 3 cara`);
+M('o',k,O,4,`Skor keaslian ${O} dari 4 (penilaian diri)`)}
+function sf(){const T=new Set(karya.map(e=>e.k)).size,O=(T>2?1:0)+document.querySelectorAll('#p_s input.ck:checked').length+($('#ja').value.trim().length>20?1:0);
+M('f','s',karya.length,8,`${karya.length} bangun (target minimal 8)`);M('x','s',T,4,`${T} dari 4 jenis transformasi`);M('o','s',O,4,`Skor keaslian ${O} dari 4 (3 jenis transformasi, alasan, dan penilaian diri)`)}
+function sd(){nav();$('#sl').innerHTML=karya.length?'<ol>'+karya.map(e=>`<li><b>${S[e.k].n}</b>: ${S[e.k].m(e.v)}</li>`).join('')+'</ol>':'<p class="q">Belum ada karya. Simpan bayangan dari sub-bab mana pun dengan tombol ⭐.</p>';
+draw($('#c_s'),[{p:base,t:''},...karya.map(e=>({p:e.p,c:S[e.k].col}))],{});sf()}
+function sm(){const T=new Set(karya.map(e=>e.k)).size,x=`KARYA: ${$('#jt').value||'(tanpa judul)'}\nLangkah (${karya.length} bangun, ${T}/4 jenis transformasi):\n`+karya.map((e,i)=>`${i+1}. ${S[e.k].n}: ${S[e.k].m(e.v)}`).join('\n')+`\nAlasan & makna: ${$('#ja').value}`;
+const t=$('#sum');t.value=x;t.select();try{navigator.clipboard.writeText(x).catch(()=>{})}catch(_){}}
+
+function nav(){$('#nav').innerHTML=[['home','🏠 Beranda'],...Object.keys(S).map(k=>[k,S[k].n]),['s','🎨 Studio ('+karya.length+')']].map(a=>`<button data-go="${a[0]}"${a[0]==cur?' class="on"':''}>${a[1]}</button>`).join('')}
+function go(k){cur=k;nav();document.querySelectorAll('section').forEach(s=>s.hidden=s.id!='p_'+k);if(S[k])upd(k);if(k=='s')sd();scrollTo(0,0)}
+
+const mb=(t,k,x)=>`<div><meter id="m${t}_${k}" max="${x}" value="0"></meter> <small id="c${t}_${k}"></small></div>`;
+const OC=['Idekku belum dibuat temanku','Memakai lebih dari satu transformasi','Ada alasan matematis yang jelas'].map(x=>`<label><input type="checkbox" class="ck">${x}</label>`).join('');
+const ffo=(k,s)=>`<h3>🎯 Tantangan berpikir kreatif</h3>
+<div class="card"><h4>Fluency (kelancaran)</h4><p>${s.F}</p><textarea id="f_${k}" rows="4" placeholder="Satu ide per baris. Uji idemu di kanvas!"></textarea>${mb('f',k,5)}</div>
+<div class="card"><h4>Flexibility (keluwesan)</h4><p>${s.X}</p>${XS.map(x=>`<label>${x}<input class="xx"></label>`).join('')}${mb('x',k,3)}</div>
+<div class="card"><h4>Originality (keaslian)</h4><p>${s.O}</p><textarea id="og_${k}" rows="3" placeholder="Tuliskan rancanganmu dan alasan matematisnya"></textarea>${OC}${mb('o',k,4)}</div>`;
+const pn=k=>{const s=S[k];return `<section id="p_${k}" hidden><h2>${s.n}</h2><p>${s.k}</p><p class="q">🔍 Amati: geser slider. Apa yang berubah, dan apa yang tetap?</p><details><summary>Cek pengamatanmu</summary>${s.ch}</details>
+<div class="row"><canvas id="c_${k}" width="640" height="640" aria-label="Bidang koordinat Cartesius"></canvas><div><div class="card">${s.p.map(p=>Array.isArray(p[2])?`<label>${p[1]}<select data-k="${k}" data-i="${p[0]}">${p[2].map((o,i)=>`<option value="${i}">${o}</option>`).join('')}</select></label>`:`<label>${p[1]}: <b id="v_${k}${p[0]}">${p[5]}</b><input type="range" data-k="${k}" data-i="${p[0]}" min="${p[2]}" max="${p[3]}" step="${p[4]}" value="${p[5]}"></label>`).join('')}<div class="fm" id="fm_${k}"></div><div id="pt_${k}"></div></div>
+<div class="card"><small>Bangun asal:</small><br>${Object.keys(SH).map(n=>`<button data-s="${n}">${n}</button>`).join(' ')}<br><button data-a="chain">🔗 Jadikan bayangan sebagai bangun asal</button><br><button data-a="save">⭐ Simpan ke Studio</button> <small id="sv_${k}"></small></div></div></div>${ffo(k,s)}</section>`};
+const home=`<section id="p_home"><h2>Halo, penjelajah transformasi! 🚀</h2>
+<p>Transformasi geometri mengubah <b>posisi</b>, <b>ukuran</b>, atau <b>bentuk</b> titik, garis, dan bidang pada koordinat Cartesius. Kamu tidak sekadar menghafal rumus: kamu menjelajah, menemukan, lalu berkreasi.</p>
+<h3>Belajar mendalam</h3><div class="g3"><div class="card"><h4>🧘 Berkesadaran</h4>Amati perubahan di kanvas sebelum menyimpulkan.</div><div class="card"><h4>💡 Bermakna</h4>Hubungkan rumus, gambar, dan situasi nyata.</div><div class="card"><h4>🎉 Menggembirakan</h4>Bereksperimen sampai menghasilkan karya.</div></div>
+<h3>Tiga dimensi berpikir kreatif (Guilford)</h3><div class="g3"><div class="card"><h4>Fluency</h4>Kelancaran: sebanyak mungkin ide atau jawaban.</div><div class="card"><h4>Flexibility</h4>Keluwesan: beragam cara dan sudut pandang.</div><div class="card"><h4>Originality</h4>Keaslian: gagasan baru yang unik dan bermakna.</div></div>
+<p>Alur tiap sub-bab: jelajahi kanvas, pahami konsep, kerjakan tiga tantangan FFO, lalu simpan bayanganmu ke Studio Karya.</p><button class="on" data-go="t">Mulai dari Translasi</button></section>`;
+const st=`<section id="p_s" hidden><h2>Studio Karya Kreatif</h2><p>Kumpulkan bayangan dari keempat sub-bab menjadi satu karya: pola, logo, atau mandala. Pakai “Jadikan bayangan sebagai bangun asal” untuk menyusun transformasi berantai.</p>
+<div class="row"><canvas id="c_s" width="640" height="640" aria-label="Karya"></canvas><div><div class="card" id="sl"></div><div class="card"><button data-a="undo">↩ Hapus terakhir</button> <button data-a="clr">🗑 Kosongkan</button></div></div></div>
+<div class="card"><h4>Fluency</h4>${mb('f','s',8)}<h4>Flexibility</h4>${mb('x','s',4)}<h4>Originality</h4>${mb('o','s',4)}
+<label>Judul karya<input id="jt"></label><label>Alasan matematis dan makna karyamu<textarea id="ja" rows="3"></textarea></label>
+<label><input type="checkbox" class="ck">Idekku belum dibuat temanku</label><label><input type="checkbox" class="ck">Karyaku punya makna atau pesan</label>
+<button class="on" data-a="sum">📋 Buat ringkasan untuk guru</button><textarea id="sum" rows="6" readonly placeholder="Ringkasan muncul di sini. Salin, lalu kirim ke gurumu."></textarea></div></section>`;
+
+document.addEventListener('input',e=>{const t=e.target,d=t.dataset,s=t.closest('section'),k=s&&s.id.slice(2);
+if(d.k){V[d.k][d.i]=+t.value;upd(d.k)}else if(k=='s')sf();else if(S[k])ff(k)});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a],[data-s],[data-go]');if(!t)return;const d=t.dataset,k=cur;
+if(d.go)go(d.go);
+else if(d.s){base=SH[d.s].map(q=>q.slice());upd(k)}
+else if(d.a=='chain'){base=base.map(q=>S[k].f(q,V[k]).map(R));upd(k)}
+else if(d.a=='save'){karya.push({k,p:base.map(q=>S[k].f(q,V[k]).map(R)),v:{...V[k]}});nav();$('#sv_'+k).textContent='✅ Tersimpan ('+karya.length+' bangun)'}
+else if(d.a=='undo'){karya.pop();sd()}
+else if(d.a=='clr'){karya=[];sd()}
+else if(d.a=='sum')sm()});
+matchMedia('(prefers-color-scheme:dark)').onchange=()=>{S[cur]?upd(cur):cur=='s'&&sd()};
+$('#main').innerHTML=home+Object.keys(S).map(pn).join('')+st;
+Object.keys(S).forEach(k=>ff(k));sf();go('home');
+</script></body></html>
